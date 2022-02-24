@@ -113,3 +113,25 @@ Set Soldasvacant = (case
 
 -- Remove duplicates
 		
+With Row_table as 
+(Select *, ROW_NUMBER() OVER(
+	   PARTITION BY ParcelID,
+					PropertyAddress,
+					Saleprice,
+					Saledate,
+					LegalReference
+	   Order by UniqueID) row_num
+From [PortfolioProject].[dbo].[Nashhousing])
+
+DELETE 
+From Row_table
+Where row_num >1
+
+
+--Remove unused comlumns
+
+
+Alter table [PortfolioProject].[dbo].[Nashhousing]
+Drop column PropertyAddress,SaleDate,OwnerAddress,TaxDistrict
+
+Select * from [PortfolioProject].[dbo].[Nashhousing]
